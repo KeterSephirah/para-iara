@@ -1,670 +1,801 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>✦ Te Amo ✦</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula Front-End — LuxBeautiful</title>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --navy:#0a0e2a;--deep:#0d1540;--blue:#1a3a7c;--mid:#2557b0;--sky:#3d7fc1;
-  --cyan:#6ab4d8;--gold:#f5c842;--gold2:#ffd966;--cream:#fef9e8;--warm:#f0e6c8;
-  --text:#e8dfc0;--muted:#9ab3cc;
+  --rosa: #cf7056;
+  --rosa-bg: #fceee9;
+  --escuro: #1a1010;
+  --code-bg: #1e1e2e;
+  --code-txt: #cdd6f4;
+  --k: #cba6f7;
+  --s: #a6e3a1;
+  --a: #89b4fa;
+  --v: #fab387;
+  --c: #6c7086;
 }
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
-body{background:var(--navy);color:var(--text);font-family:'EB Garamond',serif;overflow-x:hidden;}
-#swirl-canvas,#star-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;}
-#swirl-canvas{z-index:0;opacity:0.55;}#star-canvas{z-index:1;}
-.hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(60px,12vw,80px) clamp(16px,5vw,40px) clamp(80px,12vw,110px);}
-.hero-eyebrow{font-style:italic;font-size:clamp(0.95rem,3.5vw,1.25rem);color:var(--cyan);letter-spacing:0.18em;margin-bottom:20px;opacity:0;animation:fadeUp 1s ease 0.4s forwards;}
-.hero-names{font-family:'Cinzel',serif;font-size:clamp(2.8rem,13vw,8rem);font-weight:400;line-height:1.05;background:linear-gradient(135deg,var(--gold2) 0%,var(--gold) 40%,var(--warm) 70%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 24px rgba(245,200,66,0.4));opacity:0;animation:fadeUp 1.1s ease 0.7s forwards;letter-spacing:0.04em;}
-.hero-star{font-size:clamp(1.8rem,6vw,3rem);display:block;margin:16px 0;opacity:0;animation:fadeUp 1s ease 1.2s forwards,starPulse 3s ease-in-out 2.5s infinite;}
-.hero-sub{font-style:italic;font-size:clamp(1rem,3.5vw,1.35rem);color:var(--muted);max-width:480px;line-height:1.85;padding:0 12px;opacity:0;animation:fadeUp 1s ease 1.4s forwards;}
-.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1s ease 2.2s forwards;}
-.scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite;}
-.divider{position:relative;z-index:2;text-align:center;padding:8px 0;display:flex;align-items:center;justify-content:center;gap:14px;}
-.divider-line{flex:1;max-width:160px;height:1px;background:linear-gradient(to right,transparent,var(--blue),transparent);}
-.divider-star{color:var(--gold);font-size:0.9rem;}
-section{position:relative;z-index:2;}
-.section-label{font-style:italic;font-size:clamp(0.9rem,3vw,1.1rem);color:var(--cyan);letter-spacing:0.14em;margin-bottom:12px;opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease;}
-.section-label.vis{opacity:1;transform:translateY(0);}
-.section-title{font-family:'Cinzel',serif;font-size:clamp(1.6rem,6vw,3rem);font-weight:400;line-height:1.2;margin-bottom:22px;background:linear-gradient(135deg,var(--gold2),var(--warm));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transform:translateY(28px);transition:opacity 0.9s ease 0.1s,transform 0.9s ease 0.1s;}
-.section-title.vis{opacity:1;transform:translateY(0);}
-.message-section{padding:clamp(50px,10vw,110px) clamp(20px,6vw,80px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,70px);align-items:center;background:linear-gradient(135deg,rgba(13,21,64,0.9) 0%,rgba(10,14,42,0.95) 100%);}
-@media(max-width:768px){.message-section{grid-template-columns:1fr;padding:clamp(50px,8vw,80px) clamp(20px,5vw,60px);text-align:center;gap:clamp(28px,4vw,50px);}}
-.msg-visual{display:flex;align-items:center;justify-content:center;opacity:0;transform:translateX(-36px);transition:opacity 1s ease 0.2s,transform 1s ease 0.2s;}
-.msg-visual.vis{opacity:1;transform:translateX(0);}
-.moon-wrap{position:relative;width:clamp(130px,28vw,190px);height:clamp(130px,28vw,190px);animation:floatSlow 7s ease-in-out infinite;}
-.moon{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold2) 0%,var(--gold) 45%,#c8960a 100%);box-shadow:0 0 40px rgba(245,200,66,0.5),0 0 80px rgba(245,200,66,0.2),inset -8px -8px 20px rgba(0,0,0,0.3);position:relative;overflow:hidden;}
-.moon::after{content:'';position:absolute;top:10%;left:10%;width:30%;height:25%;background:rgba(255,255,255,0.15);border-radius:50%;transform:rotate(-20deg);}
-.moon-glow{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,0.15) 0%,transparent 70%);animation:glowPulse 3s ease-in-out infinite;}
-.moon-star{position:absolute;font-size:clamp(0.8rem,2vw,1rem);animation:twinkle 2s ease-in-out infinite;}
-.moon-star:nth-child(1){top:-8%;right:10%;animation-delay:0s;}
-.moon-star:nth-child(2){bottom:5%;right:-5%;animation-delay:0.7s;font-size:0.7rem;}
-.moon-star:nth-child(3){top:20%;left:-8%;animation-delay:1.3s;font-size:0.65rem;}
-.msg-content{opacity:0;transform:translateX(36px);transition:opacity 1s ease 0.3s,transform 1s ease 0.3s;}
-.msg-content.vis{opacity:1;transform:translateX(0);}
-.msg-text{font-size:clamp(1rem,3.2vw,1.2rem);line-height:2;font-style:italic;color:var(--warm);}
-.msg-text strong{font-style:normal;color:var(--gold2);font-weight:500;}
-.reasons-section{padding:clamp(50px,10vw,110px) clamp(20px,6vw,80px);text-align:center;}
-.reasons-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2.5vw,20px);margin-top:40px;}
-@media(max-width:900px){.reasons-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:520px){.reasons-grid{grid-template-columns:1fr;}}
-.reason-card{background:rgba(26,58,124,0.2);border:1px solid rgba(106,180,216,0.15);border-radius:16px;padding:clamp(20px,3.5vw,30px) clamp(14px,2.5vw,22px);backdrop-filter:blur(8px);opacity:0;transform:translateY(36px);transition:opacity 0.7s ease,transform 0.7s ease,border-color 0.3s ease,box-shadow 0.3s ease;position:relative;overflow:hidden;}
-.reason-card::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:0.6;}
-@media(hover:hover){.reason-card:hover{transform:translateY(-5px);border-color:rgba(245,200,66,0.3);box-shadow:0 8px 32px rgba(245,200,66,0.1),0 0 60px rgba(61,127,193,0.1);}}
-.reason-card.vis{opacity:1;transform:translateY(0);}
-.reason-icon{font-size:clamp(1.5rem,5vw,2rem);margin-bottom:10px;display:block;}
-.reason-title{font-family:'Cinzel',serif;font-size:clamp(0.85rem,2.5vw,1rem);color:var(--gold2);margin-bottom:8px;letter-spacing:0.05em;}
-.reason-desc{font-size:clamp(0.85rem,2.2vw,0.98rem);color:var(--muted);line-height:1.75;}
-.poem-section{padding:clamp(50px,10vw,110px) clamp(20px,6vw,80px);background:linear-gradient(180deg,rgba(10,14,42,0) 0%,rgba(13,21,64,0.7) 50%,rgba(10,14,42,0) 100%);text-align:center;}
-.poem-wrap{max-width:560px;margin:36px auto 0;border:1px solid rgba(106,180,216,0.2);border-radius:20px;padding:clamp(28px,5vw,52px) clamp(22px,4vw,48px);background:rgba(10,14,42,0.6);backdrop-filter:blur(10px);position:relative;opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s ease;}
-.poem-wrap.vis{opacity:1;transform:translateY(0);}
-.poem-wrap::before,.poem-wrap::after{content:'✦';position:absolute;color:var(--gold);font-size:1.2rem;opacity:0.5;}
-.poem-wrap::before{top:14px;left:18px;}.poem-wrap::after{bottom:14px;right:18px;}
-.poem-text{font-style:italic;font-size:clamp(1.05rem,3.5vw,1.3rem);line-height:2.1;color:var(--warm);}
-.poem-text .line{display:block;}.poem-line-gap{display:block;height:0.6em;}
-.poem-author{font-family:'Pinyon Script',cursive;font-size:clamp(1.4rem,5vw,2rem);color:var(--gold);margin-top:22px;display:block;opacity:0.85;}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:#f5f2f0; color:var(--escuro); line-height:1.7; }
 
-/* ══ BOTÃO SECRETO ══ */
-.secret-btn-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:clamp(40px,8vw,80px) 24px clamp(20px,4vw,40px);gap:14px;}
-.secret-hint{font-style:italic;font-size:clamp(0.8rem,2.5vw,0.95rem);color:var(--muted);letter-spacing:0.1em;opacity:0;animation:fadeUp 1s ease 0.3s forwards;}
-#btn-secreto{position:relative;background:transparent;border:none;cursor:pointer;padding:0;outline:none;-webkit-tap-highlight-color:transparent;}
-.btn-ring{position:absolute;inset:-14px;border-radius:50px;border:1px solid rgba(245,200,66,0.2);animation:ringBreath 3s ease-in-out infinite;pointer-events:none;}
-.btn-ring:nth-child(2){inset:-26px;border-color:rgba(106,180,216,0.12);animation-delay:0.6s;}
-.btn-ring:nth-child(3){inset:-40px;border-color:rgba(245,200,66,0.06);animation-delay:1.2s;}
-.btn-inner{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 42px;border-radius:50px;background:linear-gradient(135deg,rgba(13,21,64,0.95),rgba(10,14,42,0.98));border:1px solid rgba(245,200,66,0.35);box-shadow:0 0 0 1px rgba(106,180,216,0.08),0 0 20px rgba(245,200,66,0.1),inset 0 1px 0 rgba(255,255,255,0.05);transition:border-color 0.4s ease,box-shadow 0.4s ease,transform 0.2s ease;overflow:hidden;}
-.btn-inner::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(245,200,66,0.08),transparent);animation:btnShine 4s ease-in-out infinite;pointer-events:none;}
-.btn-star-l,.btn-star-r{font-size:0.85rem;color:var(--gold);opacity:0.7;transition:opacity 0.3s,transform 0.4s;animation:starPulse 2.5s ease-in-out infinite;}
-.btn-star-r{animation-delay:0.5s;}
-.btn-label{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(1rem,3.5vw,1.15rem);color:rgba(240,230,200,0.75);letter-spacing:0.18em;transition:color 0.4s ease;white-space:nowrap;}
-@media(hover:hover){#btn-secreto:hover .btn-inner{border-color:rgba(245,200,66,0.7);box-shadow:0 0 0 1px rgba(106,180,216,0.15),0 0 32px rgba(245,200,66,0.22),0 0 60px rgba(245,200,66,0.08),inset 0 1px 0 rgba(255,255,255,0.08);transform:translateY(-2px);}#btn-secreto:hover .btn-label{color:var(--warm);}#btn-secreto:hover .btn-star-l,#btn-secreto:hover .btn-star-r{opacity:1;}}
-#btn-secreto.revealed .btn-inner{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,200,66,0.3),0 0 40px rgba(245,200,66,0.35),0 0 80px rgba(245,200,66,0.12),inset 0 1px 0 rgba(255,255,255,0.1);animation:revealedPulse 2s ease-in-out infinite;}
-#btn-secreto.revealed .btn-label{color:var(--gold2);letter-spacing:0.22em;}
-#btn-secreto.revealed .btn-star-l,#btn-secreto.revealed .btn-star-r{opacity:1;transform:scale(1.3);}
-#btn-secreto.revealed{pointer-events:none;}
-#reveal-overlay{position:fixed;inset:0;z-index:9998;background:radial-gradient(ellipse at center,rgba(245,200,66,0.18) 0%,transparent 70%);pointer-events:none;opacity:0;transition:opacity 0.6s ease;}
-#reveal-overlay.active{opacity:1;}
+header { background:var(--rosa); color:#fff; padding:32px 24px; text-align:center; }
+header h1 { font-size:26px; margin-bottom:6px; }
+header p  { font-size:14px; opacity:.85; }
 
-/* ══ COUNTDOWN SECTION ══ */
-#countdown-section{
-  position:relative;z-index:2;
-  max-width:600px;margin:0 auto;
-  padding:0 clamp(20px,5vw,50px) clamp(60px,10vw,100px);
-  opacity:0;transform:translateY(20px) scale(0.97);
-  transition:opacity 0.8s ease 0.3s,transform 0.8s ease 0.3s;
-  pointer-events:none;
-  text-align:center;
-  display:none;
+.wrap { max-width:820px; margin:0 auto; padding:24px 16px 60px; display:flex; flex-direction:column; gap:28px; }
+
+/* índice */
+.indice { background:#fff; border-left:4px solid var(--rosa); border-radius:8px; padding:20px 24px; }
+.indice h2 { font-size:13px; text-transform:uppercase; letter-spacing:.1em; color:var(--rosa); margin-bottom:10px; }
+.indice ol { padding-left:18px; }
+.indice li { font-size:13px; margin-bottom:3px; }
+.indice a  { color:#1a4fa0; text-decoration:none; }
+.indice a:hover { text-decoration:underline; }
+
+/* módulo */
+.mod { background:#fff; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.07); overflow:hidden; }
+.mod-h { background:var(--rosa); color:#fff; padding:14px 22px; display:flex; align-items:center; gap:12px; }
+.num { background:rgba(255,255,255,.25); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+.mod-h h2 { font-size:16px; margin-bottom:2px; }
+.mod-h p  { font-size:12px; opacity:.85; }
+.mod-b { padding:22px; display:flex; flex-direction:column; gap:16px; }
+
+h3 { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--rosa); border-bottom:1.5px solid var(--rosa-bg); padding-bottom:5px; margin-bottom:8px; }
+p, li { font-size:13.5px; color:#333; }
+ul, ol { padding-left:18px; }
+li { margin-bottom:4px; }
+
+/* código */
+pre { background:var(--code-bg); border-radius:8px; padding:16px 18px; overflow-x:auto; font-family:'Courier New',monospace; font-size:12.5px; line-height:1.65; }
+pre code { color:var(--code-txt); }
+.k { color:var(--k); }
+.s { color:var(--s); }
+.a { color:var(--a); }
+.v { color:var(--v); }
+.c { color:var(--c); font-style:italic; }
+
+/* caixinhas */
+.dica, .aviso, .ex {
+  border-radius:7px; padding:12px 16px; font-size:13px;
 }
-#countdown-section.visible{
-  display:block;
-  opacity:1;transform:translateY(0) scale(1);
-  pointer-events:auto;
-}
+.dica  { background:#e8f5e9; border-left:4px solid #388e3c; }
+.aviso { background:#fff3e0; border-left:4px solid #f57c00; }
+.ex    { background:var(--rosa-bg); border-left:4px solid var(--rosa); }
+.dica::before  { content:"💡 Dica — "; font-weight:700; color:#388e3c; }
+.aviso::before { content:"⚠️ Atenção — "; font-weight:700; color:#f57c00; }
+.ex::before    { content:"📌 No projeto — "; font-weight:700; color:var(--rosa); }
 
-.countdown-card{
-  background:rgba(10,14,42,0.85);
-  border:1px solid rgba(245,200,66,0.3);
-  border-radius:20px;
-  padding:clamp(32px,6vw,52px) clamp(28px,5vw,50px);
-  backdrop-filter:blur(16px);
-  box-shadow:0 0 60px rgba(245,200,66,0.08),0 0 120px rgba(245,200,66,0.04);
-  position:relative;
-}
-.countdown-card::before,.countdown-card::after{content:'✦';position:absolute;color:var(--gold);font-size:1rem;opacity:0.6;}
-.countdown-card::before{top:14px;left:16px;}.countdown-card::after{bottom:14px;right:16px;}
+/* tabela */
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:var(--rosa); color:#fff; padding:8px 12px; text-align:left; }
+td { padding:7px 12px; border-bottom:1px solid #eee; vertical-align:top; }
+tr:nth-child(even) td { background:#fafafa; }
+code { background:#eee; padding:1px 5px; border-radius:4px; font-size:12px; font-family:'Courier New',monospace; }
 
-.cd-icon{font-size:clamp(2rem,7vw,2.8rem);display:block;margin-bottom:14px;animation:starPulse 2s ease-in-out infinite;}
+/* quiz */
+.quiz { background:var(--rosa-bg); border-radius:10px; padding:20px; }
+.quiz h3 { color:var(--rosa); }
+.perg { margin-bottom:16px; }
+.perg p { font-weight:700; font-size:13.5px; margin-bottom:8px; }
+.opts label { display:block; padding:5px 10px; border-radius:6px; font-size:13px; cursor:pointer; margin-bottom:3px; }
+.opts label:hover { background:rgba(207,112,86,.12); }
+.opts input { margin-right:8px; }
+.btn-quiz { background:var(--rosa); color:#fff; border:none; padding:9px 22px; border-radius:20px; font-weight:700; font-size:12px; text-transform:uppercase; cursor:pointer; letter-spacing:.05em; }
+.btn-quiz:hover { background:#b05a40; }
+#resultado { margin-top:12px; font-weight:700; font-size:13.5px; display:none; }
 
-.cd-label{
-  font-family:'EB Garamond',serif;font-style:italic;
-  font-size:clamp(0.85rem,2.8vw,1rem);
-  color:var(--muted);letter-spacing:0.16em;
-  margin-bottom:18px;display:block;
-}
-
-.cd-number{
-  font-family:'Cinzel',serif;
-  font-size:clamp(2rem,10vw,3.8rem);
-  font-weight:600;
-  background:linear-gradient(135deg,var(--gold2),var(--warm),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 20px rgba(245,200,66,0.4));
-  display:block;line-height:1.2;
-  letter-spacing:0.02em;
-  word-break:break-word;
-  overflow-wrap:break-word;
-  animation:cdPulse 1s ease-in-out infinite;
-}
-
-.cd-unit{
-  font-family:'EB Garamond',serif;font-style:italic;
-  font-size:clamp(0.8rem,2.5vw,0.95rem);
-  color:var(--cyan);letter-spacing:0.2em;
-  margin-top:10px;display:block;
-}
-
-.cd-bar-wrap{
-  width:100%;height:4px;
-  background:rgba(106,180,216,0.12);
-  border-radius:2px;margin-top:22px;overflow:hidden;
-}
-.cd-bar{
-  height:100%;
-  background:linear-gradient(to right,var(--blue),var(--cyan),var(--gold));
-  border-radius:2px;
-  transition:width 1s linear;
-}
-
-.cd-msg{
-  font-style:italic;
-  font-size:clamp(0.88rem,2.8vw,1rem);
-  color:var(--muted);margin-top:18px;line-height:1.75;
-}
-
-@keyframes cdPulse{
-  0%,100%{filter:drop-shadow(0 0 20px rgba(245,200,66,0.4));}
-  50%{filter:drop-shadow(0 0 36px rgba(245,200,66,0.7));}
-}
-@keyframes ringBreath{0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.04);opacity:1;}}
-@keyframes btnShine{0%{left:-100%;}40%{left:120%;}100%{left:120%;}}
-@keyframes revealedPulse{0%,100%{box-shadow:0 0 40px rgba(245,200,66,0.35),0 0 80px rgba(245,200,66,0.12);}50%{box-shadow:0 0 60px rgba(245,200,66,0.55),0 0 110px rgba(245,200,66,0.2);}}
-
-/* ══ TIMELINE ══ */
-.timeline-section{padding:clamp(50px,10vw,110px) clamp(20px,6vw,80px);text-align:center;}
-.timeline{position:relative;max-width:680px;margin:44px auto 0;}
-.timeline::before{content:'';position:absolute;left:50%;transform:translateX(-50%);width:1px;height:100%;background:linear-gradient(to bottom,var(--gold),var(--blue),transparent);z-index:0;}
-.tl-item{display:grid;grid-template-columns:1fr 44px 1fr;gap:16px;align-items:center;margin-bottom:44px;opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease;}
-.tl-item.vis{opacity:1;transform:translateY(0);}
-.tl-item:nth-child(odd) .tl-left{text-align:right;}
-.tl-item:nth-child(odd) .tl-right{display:none;}
-.tl-item:nth-child(even) .tl-left{display:none;}
-.tl-item:nth-child(even) .tl-right{text-align:left;}
-.tl-dot{width:44px;height:44px;background:var(--deep);border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(1rem,4vw,1.15rem);box-shadow:0 0 0 6px rgba(245,200,66,0.08),0 0 20px rgba(245,200,66,0.2);position:relative;z-index:1;flex-shrink:0;justify-self:center;}
-@media(max-width:560px){
-  .timeline::before{left:21px;transform:none;}
-  .tl-item{grid-template-columns:44px 1fr;text-align:left;}
-  .tl-item:nth-child(odd) .tl-left,.tl-item:nth-child(even) .tl-left{display:block;text-align:left;}
-  .tl-item:nth-child(odd) .tl-right,.tl-item:nth-child(even) .tl-right{display:none;}
-  .tl-dot{justify-self:start;}
-}
-.tl-label{font-style:italic;font-size:clamp(0.8rem,2.8vw,0.92rem);color:var(--cyan);margin-bottom:5px;}
-.tl-text{font-size:clamp(0.88rem,2.8vw,1rem);line-height:1.65;color:var(--warm);}
-
-/* ══ FINAL ══ */
-.final-section{padding:clamp(80px,14vw,160px) 24px;text-align:center;position:relative;overflow:hidden;}
-.final-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(37,87,176,0.18),transparent 70%);}
-.final-names{font-family:'Pinyon Script',cursive;font-size:clamp(3rem,12vw,7rem);background:linear-gradient(135deg,var(--gold2),var(--warm),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 30px rgba(245,200,66,0.35));opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s ease;position:relative;}
-.final-names.vis{opacity:1;transform:translateY(0);}
-.final-quote{font-style:italic;font-size:clamp(1rem,3.8vw,1.45rem);color:var(--muted);max-width:460px;margin:20px auto 0;line-height:1.9;padding:0 12px;opacity:0;transform:translateY(28px);transition:opacity 1s ease 0.2s,transform 1s ease 0.2s;}
-.final-quote.vis{opacity:1;transform:translateY(0);}
-.final-stars{margin-top:36px;display:flex;justify-content:center;gap:16px;font-size:clamp(1.4rem,5vw,2rem);opacity:0;transition:opacity 1s ease 0.4s;}
-.final-stars.vis{opacity:1;}
-.final-stars span{display:inline-block;animation:starPulse 2.4s ease-in-out infinite;}
-.final-stars span:nth-child(2){animation-delay:0.4s;font-size:clamp(2rem,7vw,2.8rem);}
-.final-stars span:nth-child(3){animation-delay:0.8s;}
-
-/* ══ KEYFRAMES ══ */
-@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
-@keyframes starPulse{0%,100%{transform:scale(1);filter:brightness(1);}50%{transform:scale(1.25);filter:brightness(1.5);}}
-@keyframes twinkle{0%,100%{opacity:0.4;transform:scale(0.9);}50%{opacity:1;transform:scale(1.2);}}
-@keyframes floatSlow{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-13px) rotate(1deg);}}
-@keyframes glowPulse{0%,100%{opacity:0.5;transform:scale(1);}50%{opacity:1;transform:scale(1.08);}}
-@keyframes scrollPulse{0%,100%{opacity:1;}50%{opacity:0.2;}}
+footer { text-align:center; padding:24px; font-size:12px; color:#888; }
 </style>
 </head>
 <body>
-<div id="reveal-overlay"></div>
-<canvas id="swirl-canvas"></canvas>
-<canvas id="star-canvas"></canvas>
 
-<!-- HERO -->
-<section class="hero">
-  <p class="hero-eyebrow">Para o meu eterno amor ✦</p>
-  <h1 class="hero-names">Iara</h1>
-  <span class="hero-star">✨</span>
-  <p class="hero-sub">Assim como Van Gogh pintou o céu com toda sua alma, eu pintaria o meu universo inteiro com você.</p>
-  <div class="scroll-hint"><div class="scroll-line"></div></div>
-</section>
+<header>
+  <h1>Aula de Front-End — LuxBeautiful</h1>
+  <p>HTML, CSS e JS explicados com o próprio projeto como exemplo</p>
+</header>
 
-<div class="divider"><div class="divider-line"></div><span class="divider-star">✦</span><div class="divider-line"></div></div>
+<div class="wrap">
 
-<!-- MESSAGE -->
-<section class="message-section">
-  <div class="msg-visual">
-    <div class="moon-wrap">
-      <div class="moon"></div>
-      <div class="moon-glow"></div>
-      <span class="moon-star">✦</span>
-      <span class="moon-star">★</span>
-      <span class="moon-star">✦</span>
+<!-- ÍNDICE -->
+<nav class="indice">
+  <h2>Conteúdo da Aula</h2>
+  <ol>
+    <li><a href="#m1">Estrutura de pastas e arquivos</a></li>
+    <li><a href="#m2">Esqueleto HTML — DOCTYPE, head e body</a></li>
+    <li><a href="#m3">Tags semânticas — nav, main, section, header, footer</a></li>
+    <li><a href="#m4">class vs id — e âncoras de navegação</a></li>
+    <li><a href="#m5">Links, imagens e ícones</a></li>
+    <li><a href="#m6">Formulários — input, textarea, select, button</a></li>
+    <li><a href="#m7">CSS — variáveis (:root), reset e box model</a></li>
+    <li><a href="#m8">Flexbox — o layout de todo o projeto</a></li>
+    <li><a href="#m9">Position — menu fixo e overlay do banner</a></li>
+    <li><a href="#m10">Pseudo-elementos ::before e ::after</a></li>
+    <li><a href="#m11">Transições e :hover</a></li>
+    <li><a href="#m12">Responsividade — @media queries</a></li>
+    <li><a href="#m13">JavaScript — funções, DOM e eventos</a></li>
+    <li><a href="#m14">Quiz</a></li>
+  </ol>
+</nav>
+
+
+<!-- ═══════════ M1 ═══════════ -->
+<div class="mod" id="m1">
+  <div class="mod-h"><div class="num">1</div><div><h2>Estrutura de pastas</h2><p>Como o projeto está organizado no disco</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>A organização do LuxBeautiful</h3>
+      <pre><code>LuxBeautiful/
+├── index_iara.html    <span class="c">← home</span>
+├── contato.html       <span class="c">← página de contato</span>
+├── produtos.html      <span class="c">← lista de produtos (em branco ainda)</span>
+├── prod1.html         <span class="c">← produto individual (em branco)</span>
+├── css/
+│   └── layout_iara.css
+└── imgs/
+    ├── banner.png
+    └── (demais imagens)</code></pre>
+      <p>Arquivos <strong>.html</strong> ficam na raiz. CSS vai em <code>css/</code>. Imagens em <code>imgs/</code>. Simples e direto.</p>
     </div>
-  </div>
-  <div class="msg-content">
-    <p class="section-label">Esse momento</p>
-    <h2 class="section-title">Foi incrível</h2>
-    <p class="msg-text">
-      É, eu me declarei, e as coisas saíram um pouco do controle, confesso.<br><br>
-      Mas nunca estive tão feliz na minha vida por ter participado desse caos e por ter mostrado a você o meu amor sincero, podendo dizer "eu te amo", mas com o verdadeiro significado dessas palavras: eu te quero por toda a minha vida.<br><br>
-      Ver seu rosto lindo como a lua iluminando a noite…<br>
-      ver suas sobrancelhas que completam essa lua como se fossem estrelas…<br>
-      sua boca, tão milimetricamente desenhada, que me lembra uma aurora boreal…<br>
-      e esses olhos que me mostram o poder de um buraco negro, que me puxa e me faz querer ficar horas olhando para eles.<br><br>
-      E, para ser sincero, não existiriam palavras suficientes em qualquer linguagem humana para explicar o quanto eu amo cada detalhe seu e da sua existência por inteiro.<br><br>
-      Eu te amo, meu amor, e vou continuar te amando até que minha vida se torne novamente poeira.
-    </p>
-  </div>
-</section>
 
-<div class="divider"><div class="divider-line"></div><span class="divider-star">✦</span><div class="divider-line"></div></div>
+    <div>
+      <h3>Caminhos relativos</h3>
+      <p>Quando um arquivo referencia outro, usa o caminho a partir de onde ele mesmo está.</p>
+      <pre><code><span class="c">&lt;!-- Do HTML (na raiz), o CSS está em: --&gt;</span>
+href="<span class="v">css/layout_iara.css</span>"
 
-<!-- REASONS -->
-<section class="reasons-section">
-  <p class="section-label">pinceladas de amor</p>
-  <h2 class="section-title">Coisas que fazem<br>Meu coração agitar</h2>
-  <div class="reasons-grid">
-    <div class="reason-card"><span class="reason-icon">🌌</span><div class="reason-title">Seus Olhos</div><p class="reason-desc">Aquilo que nunca me canso de olhar e admirar.</p></div>
-    <div class="reason-card"><span class="reason-icon">⭐</span><div class="reason-title">Sua voz</div><p class="reason-desc">Essa voz agitada, divertida e amorosa que você tem sempre me deixa mais apaixonado do que o normal.</p></div>
-    <div class="reason-card"><span class="reason-icon">🎨</span><div class="reason-title">Sua forma de ver as coisas</div><p class="reason-desc">Esse jeito confuso para mim, mas tão humano, de ver as coisas faz com que até eu me torne uma pessoa mais carinhosa com o mundo.</p></div>
-    <div class="reason-card"><span class="reason-icon">🌙</span><div class="reason-title">Por sua forma de mostrar amor</div><p class="reason-desc">Coisas tão simples como um "eu te amo" seu ou um "meu amor" me fazem sentir o homem mais imbatível que este mundo já viu.</p></div>
-    <div class="reason-card"><span class="reason-icon">💫</span><div class="reason-title">Sua alma</div><p class="reason-desc">Existe algo em você que vai além do que consigo descrever. Eu sinto, mas não sei nomear. E sei que, independentemente do universo ou do mundo em que eu te encontrar, vou me apaixonar novamente.</p></div>
-    <div class="reason-card"><span class="reason-icon">✦</span><div class="reason-title">Por você ser você</div><p class="reason-desc">Não precisa de razão. Você, sendo você, já me torna o homem mais feliz e apaixonado deste mundo. Eu te amo, meu amor.</p></div>
-  </div>
-</section>
+<span class="c">/* Do CSS (dentro de css/), a imagem está em: */</span>
+url('<span class="v">../imgs/banner.png</span>')
+<span class="c">/* ".." = sobe um nível (sai de css/) antes de entrar em imgs/ */</span></code></pre>
+      <div class="dica">Sempre use barra normal <code>/</code>. Barra invertida <code>\</code> só funciona no Windows — na web quebra.</div>
+    </div>
 
-<div class="divider"><div class="divider-line"></div><span class="divider-star">✦</span><div class="divider-line"></div></div>
-
-<!-- POEM -->
-<section class="poem-section">
-  <p class="section-label">sob as estrelas</p>
-  <h2 class="section-title">Um dia para lembrar</h2>
-  <div class="poem-wrap">
-    <p class="poem-text">
-      <span class="line">De fato, eu espero que você tenha gostado de tudo isso que fiz.</span>
-      <span class="line">Tudo bem que ainda é algo bem simples, mas foi da melhor forma que consegui.</span><br>
-      <span class="line">Mas, nesse final, eu queria dar espaço ao Keter que está aí agora conversando com você,</span>
-      <span class="line">e ele vai continuar o que eu deveria fazer aqui.</span><br>
-      <span class="line">Eu te amo e peço que espere o eu que está aí falar com você</span>
-      <span class="line">antes de apertar o botão depois deste texto.</span><br>
-      <span class="line">De resto, é isso.</span>
-    </p>
-    <span class="poem-author">— Keter</span>
-  </div>
-
-  <!-- BOTÃO SECRETO -->
-  <div class="secret-btn-wrap">
-    <p class="secret-hint">apenas quando estiver pronta…</p>
-    <button id="btn-secreto" aria-label="Revelar mensagem secreta">
-      <div class="btn-ring"></div>
-      <div class="btn-ring"></div>
-      <div class="btn-ring"></div>
-      <div class="btn-inner">
-        <span class="btn-star-l">✦</span>
-        <span class="btn-label">abrir</span>
-        <span class="btn-star-r">✦</span>
-      </div>
-    </button>
-  </div>
-</section>
-
-<!-- COUNTDOWN (aparece após o botão) -->
-<div id="countdown-section">
-  <div class="countdown-card">
-    <span class="cd-icon">⏳</span>
-    <span class="cd-label">faltam exatamente</span>
-    <span class="cd-number" id="cd-num">—</span>
-    <span class="cd-unit">segundos</span>
-    <div class="cd-bar-wrap"><div class="cd-bar" id="cd-bar"></div></div>
-    <p class="cd-msg">cada segundo que passa<br>é um segundo mais perto de você ✦</p>
   </div>
 </div>
 
-<div class="divider"><div class="divider-line"></div><span class="divider-star">✦</span><div class="divider-line"></div></div>
 
-<!-- FINAL -->
-<section class="final-section">
-  <div class="final-names">Keter &amp; Xay</div>
-  <p class="final-quote">"Olhando para as estrelas, sonho… e na minha pintura, você está em cada uma delas."</p>
-  <div class="final-stars"><span>✦</span><span>★</span><span>✦</span></div>
-</section>
+<!-- ═══════════ M2 ═══════════ -->
+<div class="mod" id="m2">
+  <div class="mod-h"><div class="num">2</div><div><h2>Esqueleto HTML</h2><p>A base de toda página web</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>O código mínimo obrigatório</h3>
+      <pre><code><span class="k">&lt;!DOCTYPE html&gt;</span>              <span class="c">&lt;!-- "use HTML5" --&gt;</span>
+&lt;<span class="k">html</span> <span class="a">lang</span>="<span class="v">pt-br</span>"&gt;           <span class="c">&lt;!-- idioma da página --&gt;</span>
+&lt;<span class="k">head</span>&gt;
+  &lt;<span class="k">meta</span> <span class="a">charset</span>="<span class="v">UTF-8</span>"&gt;      <span class="c">&lt;!-- permite ã, ç, é etc --&gt;</span>
+  &lt;<span class="k">meta</span> <span class="a">name</span>="<span class="v">viewport</span>"
+        <span class="a">content</span>="<span class="v">width=device-width, initial-scale=1.0</span>"&gt; <span class="c">&lt;!-- ajusta para celular --&gt;</span>
+  &lt;<span class="k">title</span>&gt;<span class="s">LuxBeautiful</span>&lt;/<span class="k">title</span>&gt;  <span class="c">&lt;!-- texto na aba do navegador --&gt;</span>
+  &lt;<span class="k">link</span> <span class="a">rel</span>="<span class="v">stylesheet</span>" <span class="a">href</span>="<span class="v">css/layout_iara.css</span>"&gt;
+&lt;/<span class="k">head</span>&gt;
+&lt;<span class="k">body</span>&gt;
+  <span class="c">&lt;!-- tudo que o usuário VÊ fica aqui --&gt;</span>
+&lt;/<span class="k">body</span>&gt;
+&lt;/<span class="k">html</span>&gt;</code></pre>
+    </div>
+
+    <div>
+      <h3>Extras usados no projeto</h3>
+      <pre><code><span class="c">&lt;!-- Ícone na aba (favicon) --&gt;</span>
+&lt;<span class="k">link</span> <span class="a">rel</span>="<span class="v">shortcut icon</span>" <span class="a">href</span>="<span class="v">imgs/cosmeticos.png</span>" <span class="a">type</span>="<span class="v">image/x-icon</span>"&gt;
+
+<span class="c">&lt;!-- Fonte externa do Google Fonts --&gt;</span>
+&lt;<span class="k">link</span> <span class="a">rel</span>="<span class="v">preconnect</span>" <span class="a">href</span>="<span class="v">https://fonts.googleapis.com</span>"&gt;
+&lt;<span class="k">link</span> <span class="a">rel</span>="<span class="v">stylesheet</span>" <span class="a">href</span>="<span class="v">https://fonts.googleapis.com/css2?family=Cinzel...</span>"&gt;
+
+<span class="c">&lt;!-- Biblioteca de ícones --&gt;</span>
+&lt;<span class="k">link</span> <span class="a">rel</span>="<span class="v">stylesheet</span>" <span class="a">href</span>="<span class="v">https://cdn.jsdelivr.net/npm/bootstrap-icons...</span>"&gt;</code></pre>
+      <div class="dica"><code>preconnect</code> avisa o navegador para já conectar ao servidor do Google antes de precisar dos arquivos — carrega mais rápido.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M3 ═══════════ -->
+<div class="mod" id="m3">
+  <div class="mod-h"><div class="num">3</div><div><h2>Tags semânticas</h2><p>HTML com significado real</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>Por que usar tags semânticas?</h3>
+      <p>Antes do HTML5, tudo era <code>&lt;div&gt;</code>. As tags semânticas não mudam a aparência — elas dizem o que cada bloco representa, ajudando buscadores e leitores de tela.</p>
+      <table>
+        <tr><th>Tag</th><th>Significa</th><th>Onde aparece no projeto</th></tr>
+        <tr><td><code>&lt;main&gt;</code></td><td>Conteúdo principal</td><td>Envolve o menu e todo o conteúdo</td></tr>
+        <tr><td><code>&lt;nav&gt;</code></td><td>Área de navegação</td><td>O menu com os links</td></tr>
+        <tr><td><code>&lt;section&gt;</code></td><td>Seção temática</td><td>Lançamentos, Destaques, Promoções…</td></tr>
+        <tr><td><code>&lt;header&gt;</code></td><td>Cabeçalho</td><td>Topo da página de contato</td></tr>
+        <tr><td><code>&lt;footer&gt;</code></td><td>Rodapé</td><td>E-mail e telefone no final</td></tr>
+        <tr><td><code>&lt;div&gt;</code></td><td>Agrupamento genérico</td><td>Agrupamentos visuais sem significado especial</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3>A hierarquia do index_iara.html</h3>
+      <pre><code>&lt;<span class="k">main</span>&gt;
+  &lt;<span class="k">nav</span>&gt;  <span class="c">&lt;!-- menu --&gt;</span>  &lt;/<span class="k">nav</span>&gt;
+  &lt;<span class="k">div</span> <span class="a">class</span>="<span class="v">conteudo</span>"&gt;
+    &lt;<span class="k">section</span> <span class="a">class</span>="<span class="v">banner</span>"&gt;...&lt;/<span class="k">section</span>&gt;
+    &lt;<span class="k">section</span> <span class="a">id</span>="<span class="v">lancamentos</span>"&gt;...&lt;/<span class="k">section</span>&gt;
+    &lt;<span class="k">section</span> <span class="a">id</span>="<span class="v">destaques</span>"&gt;...&lt;/<span class="k">section</span>&gt;
+    &lt;<span class="k">section</span> <span class="a">id</span>="<span class="v">promocoes</span>"&gt;...&lt;/<span class="k">section</span>&gt;
+    &lt;<span class="k">section</span> <span class="a">id</span>="<span class="v">vendedoras</span>"&gt;...&lt;/<span class="k">section</span>&gt;
+  &lt;/<span class="k">div</span>&gt;
+&lt;/<span class="k">main</span>&gt;
+&lt;<span class="k">footer</span>&gt;...&lt;/<span class="k">footer</span>&gt;</code></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M4 ═══════════ -->
+<div class="mod" id="m4">
+  <div class="mod-h"><div class="num">4</div><div><h2>class vs id — e âncoras</h2><p>Como identificar e navegar entre elementos</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <table>
+        <tr><th></th><th>class</th><th>id</th></tr>
+        <tr><td><strong>Símbolo no CSS</strong></td><td><code>.nome</code></td><td><code>#nome</code></td></tr>
+        <tr><td><strong>Pode repetir?</strong></td><td>Sim — vários elementos podem ter a mesma classe</td><td>Não — só um por página</td></tr>
+        <tr><td><strong>Uso principal</strong></td><td>Estilo visual reutilizável</td><td>Âncoras de navegação e JavaScript</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3>Âncoras — rolar até uma seção</h3>
+      <pre><code><span class="c">&lt;!-- No menu: link que rola até a seção --&gt;</span>
+&lt;<span class="k">a</span> <span class="a">href</span>="<span class="v">#lancamentos</span>"&gt;Lançamentos&lt;/<span class="k">a</span>&gt;
+
+<span class="c">&lt;!-- Na página: a seção com o id correspondente --&gt;</span>
+&lt;<span class="k">section</span> <span class="a">id</span>="<span class="v">lancamentos</span>"&gt;...&lt;/<span class="k">section</span>&gt;</code></pre>
+      <div class="ex">O botão "Ver lançamentos" do banner usa <code>href="#lancamentos"</code> para rolar suavemente até aquela seção. O CSS activa isso com <code>html { scroll-behavior: smooth; }</code>.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M5 ═══════════ -->
+<div class="mod" id="m5">
+  <div class="mod-h"><div class="num">5</div><div><h2>Links, imagens e ícones</h2><p>&lt;a&gt;, &lt;img&gt; e Bootstrap Icons</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>Tag &lt;a&gt;</h3>
+      <pre><code><span class="c">&lt;!-- Outra página --&gt;</span>
+&lt;<span class="k">a</span> <span class="a">href</span>="<span class="v">contato.html</span>"&gt;Contato&lt;/<span class="k">a</span>&gt;
+
+<span class="c">&lt;!-- Âncora (mesma página) --&gt;</span>
+&lt;<span class="k">a</span> <span class="a">href</span>="<span class="v">#lancamentos</span>"&gt;Ver lançamentos&lt;/<span class="k">a</span>&gt;
+
+<span class="c">&lt;!-- Site externo: target="_blank" abre em nova aba --&gt;</span>
+&lt;<span class="k">a</span> <span class="a">href</span>="<span class="v">https://site.com</span>" <span class="a">target</span>="<span class="v">_blank</span>"&gt;Externo&lt;/<span class="k">a</span>&gt;</code></pre>
+    </div>
+
+    <div>
+      <h3>Tag &lt;img&gt;</h3>
+      <pre><code>&lt;<span class="k">img</span> <span class="a">src</span>="<span class="v">imgs/creme_dior.avif</span>" <span class="a">alt</span>="<span class="v">Creme Dior</span>"&gt;</code></pre>
+      <ul>
+        <li><strong>src</strong> — caminho da imagem</li>
+        <li><strong>alt</strong> — texto alternativo; aparece se a imagem não carregar e é lido por leitores de tela</li>
+      </ul>
+      <div class="aviso">Nunca omita o <code>alt</code>. Se a imagem for só decoração, use <code>alt=""</code>.</div>
+    </div>
+
+    <div>
+      <h3>Bootstrap Icons</h3>
+      <p>Após carregar a biblioteca no <code>&lt;head&gt;</code>, cada ícone é uma simples tag <code>&lt;i&gt;</code>:</p>
+      <pre><code>&lt;<span class="k">i</span> <span class="a">class</span>="<span class="v">bi bi-house</span>"&gt;&lt;/<span class="k">i</span>&gt;        <span class="c">&lt;!-- 🏠 --&gt;</span>
+&lt;<span class="k">i</span> <span class="a">class</span>="<span class="v">bi bi-envelope-fill</span>"&gt;&lt;/<span class="k">i</span>&gt; <span class="c">&lt;!-- ✉️ --&gt;</span>
+&lt;<span class="k">i</span> <span class="a">class</span>="<span class="v">bi bi-whatsapp</span>"&gt;&lt;/<span class="k">i</span>&gt;    <span class="c">&lt;!-- 💬 --&gt;</span></code></pre>
+      <div class="ex">No menu, cada link tem um ícone + texto em <code>&lt;span&gt;</code>. No tablet, o CSS oculta o <code>&lt;span&gt;</code> (<code>display:none</code>) e deixa só o ícone — economiza espaço sem mudar o HTML.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M6 ═══════════ -->
+<div class="mod" id="m6">
+  <div class="mod-h"><div class="num">6</div><div><h2>Formulários</h2><p>input, textarea, select, label e button</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>Estrutura do formulário de contato</h3>
+      <pre><code><span class="c">&lt;!-- Grupo label + campo — padrão repetido para cada campo --&gt;</span>
+&lt;<span class="k">div</span> <span class="a">class</span>="<span class="v">form-grupo</span>"&gt;
+  &lt;<span class="k">label</span> <span class="a">for</span>="<span class="v">nome</span>"&gt;Nome&lt;/<span class="k">label</span>&gt;
+  &lt;<span class="k">input</span> <span class="a">type</span>="<span class="v">text</span>" <span class="a">id</span>="<span class="v">nome</span>" <span class="a">placeholder</span>="<span class="v">Seu nome completo</span>"&gt;
+&lt;/<span class="k">div</span>&gt;
+
+&lt;<span class="k">div</span> <span class="a">class</span>="<span class="v">form-grupo</span>"&gt;
+  &lt;<span class="k">label</span> <span class="a">for</span>="<span class="v">assunto</span>"&gt;Assunto&lt;/<span class="k">label</span>&gt;
+  &lt;<span class="k">select</span> <span class="a">id</span>="<span class="v">assunto</span>"&gt;
+    &lt;<span class="k">option</span> <span class="a">disabled</span> <span class="a">selected</span>&gt;Selecione...&lt;/<span class="k">option</span>&gt;
+    &lt;<span class="k">option</span> <span class="a">value</span>="<span class="v">duvida</span>"&gt;Dúvida sobre produto&lt;/<span class="k">option</span>&gt;
+  &lt;/<span class="k">select</span>&gt;
+&lt;/<span class="k">div</span>&gt;
+
+&lt;<span class="k">div</span> <span class="a">class</span>="<span class="v">form-grupo</span>"&gt;
+  &lt;<span class="k">label</span> <span class="a">for</span>="<span class="v">mensagem</span>"&gt;Mensagem&lt;/<span class="k">label</span>&gt;
+  &lt;<span class="k">textarea</span> <span class="a">id</span>="<span class="v">mensagem</span>"&gt;&lt;/<span class="k">textarea</span>&gt;
+&lt;/<span class="k">div</span>&gt;
+
+&lt;<span class="k">button</span> <span class="a">onclick</span>="<span class="v">enviar()</span>"&gt;Enviar&lt;/<span class="k">button</span>&gt;</code></pre>
+    </div>
+
+    <div>
+      <table>
+        <tr><th>Tag/Tipo</th><th>Para que serve</th></tr>
+        <tr><td><code>input type="text"</code></td><td>Campo de texto de uma linha</td></tr>
+        <tr><td><code>input type="email"</code></td><td>Igual ao text + valida formato de e-mail</td></tr>
+        <tr><td><code>textarea</code></td><td>Texto de múltiplas linhas</td></tr>
+        <tr><td><code>select + option</code></td><td>Lista suspensa de opções</td></tr>
+        <tr><td><code>button</code></td><td>Botão clicável</td></tr>
+      </table>
+      <div class="dica">O <code>for</code> do <code>&lt;label&gt;</code> deve ser igual ao <code>id</code> do campo. Assim, clicar no texto do label já foca o campo automaticamente.</div>
+      <div class="dica"><code>disabled selected</code> no primeiro <code>&lt;option&gt;</code> faz ele aparecer como placeholder mas não ser selecionável.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M7 ═══════════ -->
+<div class="mod" id="m7">
+  <div class="mod-h"><div class="num">7</div><div><h2>CSS — variáveis, reset e box model</h2><p>A base do estilo do projeto</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>Variáveis CSS — :root</h3>
+      <p>Define valores reutilizáveis em um só lugar. Se mudar a cor principal, muda em um lugar e atualiza o site todo.</p>
+      <pre><code><span class="k">:root</span> {
+  <span class="a">--bg-cor-escura</span>:     <span class="v">#cb8e7d</span>;
+  <span class="a">--bg-secao</span>:          <span class="v">rgb(252, 211, 194)</span>;
+  <span class="a">--cor-destaque</span>:      <span class="v">#fd0101</span>;
+  <span class="a">--texto-claro</span>:       <span class="v">#fdf9f9</span>;
+  <span class="a">--fonte-padrao</span>:      <span class="v">'Lato', Arial, sans-serif</span>;
+  <span class="a">--fonte-titulo</span>:      <span class="v">'Cinzel', serif</span>;
+  <span class="a">--altura-menu</span>:       <span class="v">70px</span>;
+  <span class="a">--borda-arredondada</span>: <span class="v">12px</span>;
+}
+
+<span class="c">/* Usar a variável: */</span>
+<span class="k">.footer</span> { <span class="a">background-color</span>: <span class="v">var(--bg-cor-escura)</span>; }</code></pre>
+    </div>
+
+    <div>
+      <h3>Reset CSS</h3>
+      <p>Navegadores têm estilos padrão diferentes. O reset zera tudo para ter controle total.</p>
+      <pre><code><span class="k">*</span> {
+  <span class="a">margin</span>: <span class="v">0</span>;
+  <span class="a">padding</span>: <span class="v">0</span>;
+  <span class="a">box-sizing</span>: <span class="v">border-box</span>; <span class="c">/* padding incluso no tamanho definido */</span>
+}</code></pre>
+      <div class="dica"><strong>box-sizing: border-box</strong> — se você define <code>width: 200px</code>, o padding fica dentro desses 200px. Sem isso, o padding seria somado por fora e o elemento ficaria maior que o esperado.</div>
+    </div>
+
+    <div>
+      <h3>Box Model — as 4 camadas de todo elemento</h3>
+      <pre><code><span class="c">margin   → espaço externo (afasta outros elementos)
+border   → borda visível
+padding  → espaço interno (entre borda e conteúdo)
+content  → o conteúdo em si (texto, imagem…)</span>
+
+<span class="k">.cartao</span> {
+  <span class="a">padding</span>: <span class="v">16px</span>;
+  <span class="a">border-radius</span>: <span class="v">12px</span>;       <span class="c">/* arredonda os cantos */</span>
+  <span class="a">box-shadow</span>: <span class="v">0 4px 18px rgba(0,0,0,0.08)</span>; <span class="c">/* sombra */</span>
+}</code></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M8 ═══════════ -->
+<div class="mod" id="m8">
+  <div class="mod-h"><div class="num">8</div><div><h2>Flexbox</h2><p>O sistema de layout de quase tudo no projeto</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <p>Ativa com <code>display: flex</code> no contêiner. Os filhos diretos viram "itens flex" e se organizam automaticamente em linha ou coluna.</p>
+    </div>
+
+    <div>
+      <h3>Propriedades usadas no projeto</h3>
+      <table>
+        <tr><th>Propriedade</th><th>O que faz</th><th>Onde</th></tr>
+        <tr><td><code>flex-direction: row</code></td><td>Itens em linha (padrão)</td><td>Menu, cartões no desktop</td></tr>
+        <tr><td><code>flex-direction: column</code></td><td>Itens empilhados</td><td>Menu mobile, cartões no celular</td></tr>
+        <tr><td><code>justify-content: space-between</code></td><td>Empurra primeiro e último para as pontas</td><td>Menu (logo à esquerda, links à direita)</td></tr>
+        <tr><td><code>align-items: center</code></td><td>Centraliza no eixo cruzado</td><td>Menu (itens alinhados verticalmente)</td></tr>
+        <tr><td><code>gap: 20px</code></td><td>Espaço entre os itens</td><td>Cartões, links do menu</td></tr>
+        <tr><td><code>flex: 1</code></td><td>O item cresce para preencher o espaço</td><td>Colunas do formulário de contato</td></tr>
+        <tr><td><code>flex-wrap: wrap</code></td><td>Itens podem quebrar para a linha seguinte</td><td>Cartões no tablet</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3>Exemplo: menu e cartões</h3>
+      <pre><code><span class="k">.menu</span> {
+  <span class="a">display</span>: <span class="v">flex</span>;
+  <span class="a">align-items</span>: <span class="v">center</span>;
+  <span class="a">justify-content</span>: <span class="v">space-between</span>; <span class="c">/* logo esq, links dir */</span>
+}
+
+<span class="k">.cartoes</span> {
+  <span class="a">display</span>: <span class="v">flex</span>;
+  <span class="a">flex-direction</span>: <span class="v">column</span>; <span class="c">/* mobile: empilhados */</span>
+  <span class="a">gap</span>: <span class="v">20px</span>;
+}
+<span class="c">/* No desktop vira linha (ver módulo 12) */</span></code></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M9 ═══════════ -->
+<div class="mod" id="m9">
+  <div class="mod-h"><div class="num">9</div><div><h2>Position</h2><p>Menu fixo e overlay do banner</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <table>
+        <tr><th>Valor</th><th>Comportamento</th></tr>
+        <tr><td><code>static</code></td><td>Padrão. Segue o fluxo normal.</td></tr>
+        <tr><td><code>relative</code></td><td>No fluxo, mas permite deslocamento. Serve de referência para filhos <code>absolute</code>.</td></tr>
+        <tr><td><code>absolute</code></td><td>Sai do fluxo. Posiciona-se em relação ao pai com <code>position</code> não-static mais próximo.</td></tr>
+        <tr><td><code>fixed</code></td><td>Sai do fluxo. Prende-se à janela — não move ao rolar.</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3>Menu fixo no topo</h3>
+      <pre><code><span class="k">.menu</span> {
+  <span class="a">position</span>: <span class="v">fixed</span>;
+  <span class="a">top</span>: <span class="v">0</span>;
+  <span class="a">z-index</span>: <span class="v">999</span>; <span class="c">/* fica na frente de todo o conteúdo */</span>
+}
+
+<span class="c">/* Como o menu é fixed (fora do fluxo), o conteúdo ficaria
+   embaixo dele. Solução: empurrar com padding-top: */</span>
+<span class="k">.conteudo</span> {
+  <span class="a">padding-top</span>: <span class="v">var(--altura-menu)</span>; <span class="c">/* = 70px */</span>
+}</code></pre>
+    </div>
+
+    <div>
+      <h3>Overlay do banner</h3>
+      <p>A camada escura sobre a imagem do banner é criada com CSS puro, sem nenhuma <code>&lt;div&gt;</code> extra no HTML:</p>
+      <pre><code><span class="k">.banner</span> {
+  <span class="a">position</span>: <span class="v">relative</span>; <span class="c">/* referência para o filho absolute */</span>
+  <span class="a">background-image</span>: <span class="v">url('../imgs/banner.png')</span>;
+}
+
+<span class="k">.banner::before</span> {  <span class="c">/* camada escura (pseudo-elemento) */</span>
+  <span class="a">content</span>: <span class="v">''</span>;
+  <span class="a">position</span>: <span class="v">absolute</span>;
+  <span class="a">inset</span>: <span class="v">0</span>;  <span class="c">/* = top:0; right:0; bottom:0; left:0 */</span>
+  <span class="a">background-color</span>: <span class="v">rgba(0,0,0,0.35)</span>;
+}
+
+<span class="k">.banner-texto</span> {
+  <span class="a">position</span>: <span class="v">relative</span>;
+  <span class="a">z-index</span>: <span class="v">1</span>; <span class="c">/* texto fica na frente do overlay */</span>
+}</code></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M10 ═══════════ -->
+<div class="mod" id="m10">
+  <div class="mod-h"><div class="num">10</div><div><h2>Pseudo-elementos ::before e ::after</h2><p>Conteúdo criado pelo CSS sem tocar no HTML</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <p><code>::before</code> insere um conteúdo <em>antes</em> do elemento. <code>::after</code> insere <em>depois</em>. São usados para decoração que não precisa estar no HTML.</p>
+      <div class="aviso">Sempre exigem <code>content: ''</code> para existirem — mesmo que o conteúdo seja vazio.</div>
+    </div>
+
+    <div>
+      <h3>Linha decorativa após os títulos</h3>
+      <pre><code><span class="k">.sessao h2</span> {
+  <span class="a">display</span>: <span class="v">flex</span>;
+  <span class="a">align-items</span>: <span class="v">center</span>;
+  <span class="a">gap</span>: <span class="v">12px</span>;
+}
+
+<span class="k">.sessao h2::after</span> {
+  <span class="a">content</span>: <span class="v">''</span>;
+  <span class="a">flex</span>: <span class="v">1</span>;  <span class="c">/* ocupa todo o espaço que sobrar */</span>
+  <span class="a">height</span>: <span class="v">2px</span>;
+  <span class="a">background</span>: <span class="v">linear-gradient(to right, #cb8e7d, transparent)</span>;
+}</code></pre>
+      <div class="ex">É a linha rosa que aparece ao lado de "Lançamentos", "Destaques" etc., desbotando para a direita. Zero HTML extra.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M11 ═══════════ -->
+<div class="mod" id="m11">
+  <div class="mod-h"><div class="num">11</div><div><h2>Transições e :hover</h2><p>Animações suaves na interação</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <h3>:hover e transition</h3>
+      <p><code>:hover</code> define estilos que só valem quando o mouse está sobre o elemento. <code>transition</code> anima a mudança em vez de ser instantânea.</p>
+      <pre><code><span class="k">.cartao</span> {
+  <span class="c">/* declara a transição no estado normal */</span>
+  <span class="a">transition</span>: <span class="v">transform 0.25s ease, box-shadow 0.25s ease</span>;
+}
+
+<span class="k">.cartao:hover</span> {
+  <span class="a">transform</span>: <span class="v">translateY(-5px)</span>;  <span class="c">/* sobe 5px */</span>
+  <span class="a">box-shadow</span>: <span class="v">0 12px 28px rgba(0,0,0,0.12)</span>;
+}</code></pre>
+      <div class="dica">A <code>transition</code> fica no estado <strong>normal</strong> do elemento, não no <code>:hover</code>. Assim a animação funciona tanto na entrada quanto na saída do hover.</div>
+    </div>
+
+    <div>
+      <h3>Zoom na foto das vendedoras</h3>
+      <pre><code><span class="k">.vendedora-foto-wrap</span> {
+  <span class="a">overflow</span>: <span class="v">hidden</span>; <span class="c">/* esconde o que "vaza" no zoom */</span>
+}
+<span class="k">.vendedora-foto-wrap img</span> {
+  <span class="a">transition</span>: <span class="v">transform 0.4s</span>;
+}
+<span class="k">.cartao-vendedora:hover .vendedora-foto-wrap img</span> {
+  <span class="a">transform</span>: <span class="v">scale(1.05)</span>; <span class="c">/* zoom de 5% */</span>
+}</code></pre>
+      <div class="ex">O hover é detectado no card inteiro (<code>.cartao-vendedora</code>), mas o efeito é aplicado na imagem lá dentro. CSS permite selecionar um filho com base no estado do pai assim.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M12 ═══════════ -->
+<div class="mod" id="m12">
+  <div class="mod-h"><div class="num">12</div><div><h2>Responsividade — @media queries</h2><p>Um site para qualquer tamanho de tela</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <p>Media queries aplicam estilos diferentes conforme a largura da tela.</p>
+      <pre><code><span class="c">/* Só vale quando a tela tem 768px ou menos */</span>
+<span class="k">@media (max-width: 768px)</span> {
+  <span class="k">.menu</span> { ... }
+}</code></pre>
+    </div>
+
+    <div>
+      <h3>Os 4 breakpoints do projeto</h3>
+      <table>
+        <tr><th>Condição</th><th>Alvo</th><th>O que muda</th></tr>
+        <tr><td><code>min-width: 992px</code></td><td>Desktop</td><td>Cartões em linha</td></tr>
+        <tr><td><code>max-width: 1024px</code></td><td>Tablet</td><td>Menu mostra só ícones (texto some)</td></tr>
+        <tr><td><code>max-width: 768px</code></td><td>Mobile</td><td>Menu vira barra flutuante na parte inferior</td></tr>
+        <tr><td><code>max-width: 430px</code></td><td>Celular pequeno</td><td>Cartões ocupam 100% da largura</td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3>O menu mobile — a parte mais criativa do projeto</h3>
+      <pre><code><span class="k">@media (max-width: 768px)</span> {
+  <span class="k">.menu</span> {
+    <span class="a">position</span>: <span class="v">fixed</span>;
+    <span class="a">bottom</span>: <span class="v">14px</span>;            <span class="c">/* vai para baixo */</span>
+    <span class="a">left</span>: <span class="v">50%</span>;
+    <span class="a">transform</span>: <span class="v">translateX(-50%)</span>; <span class="c">/* centraliza */</span>
+    <span class="a">width</span>: <span class="v">92%</span>;
+    <span class="a">border-radius</span>: <span class="v">20px</span>;
+    <span class="a">flex-direction</span>: <span class="v">column</span>;
+  }
+  <span class="c">/* Menu fechado: lista desaparece */</span>
+  <span class="k">.menu.menu-collapsed ul</span> {
+    <span class="a">max-height</span>: <span class="v">0</span>;
+    <span class="a">opacity</span>: <span class="v">0</span>;
+    <span class="a">pointer-events</span>: <span class="v">none</span>;
+  }
+}</code></pre>
+      <div class="dica"><code>left: 50%</code> + <code>transform: translateX(-50%)</code> é a técnica clássica para centralizar um elemento com <code>position: fixed</code>.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ M13 ═══════════ -->
+<div class="mod" id="m13">
+  <div class="mod-h"><div class="num">13</div><div><h2>JavaScript</h2><p>Funções, DOM e eventos</p></div></div>
+  <div class="mod-b">
+
+    <div>
+      <p>HTML = estrutura. CSS = aparência. <strong>JS = comportamento.</strong> No projeto, o JS faz duas coisas: valida o formulário e controla o menu mobile.</p>
+    </div>
+
+    <div>
+      <h3>Validação do formulário</h3>
+      <pre><code><span class="k">function</span> <span class="a">enviar</span>() {
+  <span class="c">// .getElementById busca o elemento pelo id</span>
+  <span class="c">// .value lê o que o usuário digitou</span>
+  <span class="c">// .trim() remove espaços vazios nas pontas</span>
+  <span class="k">const</span> nome     = document.getElementById(<span class="s">'nome'</span>).value.trim();
+  <span class="k">const</span> email    = document.getElementById(<span class="s">'email'</span>).value.trim();
+  <span class="k">const</span> mensagem = document.getElementById(<span class="s">'mensagem'</span>).value.trim();
+
+  <span class="c">// ! = negação. !nome é verdadeiro se nome estiver vazio</span>
+  <span class="k">if</span> (!nome || !email || !mensagem) {
+    alert(<span class="s">'Preencha nome, e-mail e mensagem.'</span>);
+    <span class="k">return</span>; <span class="c">// para aqui se algum campo estiver vazio</span>
+  }
+
+  alert(<span class="s">'Mensagem enviada!'</span>);
+}</code></pre>
+    </div>
+
+    <div>
+      <h3>Controle do menu mobile</h3>
+      <pre><code><span class="k">const</span> menu       = document.getElementById(<span class="s">'menu'</span>);
+<span class="k">const</span> menuToggle = document.getElementById(<span class="s">'menuToggle'</span>);
+
+<span class="c">// addEventListener: "quando clicar no botão, executa esta função"</span>
+menuToggle.addEventListener(<span class="s">'click'</span>, () => {
+  <span class="c">// classList.toggle: adiciona a classe se não existir, remove se existir</span>
+  menu.classList.toggle(<span class="s">'menu-collapsed'</span>);
+});</code></pre>
+      <div class="ex">O JS só adiciona/remove a classe <code>menu-collapsed</code> no menu. Quem de fato esconde a lista é o CSS: <code>.menu.menu-collapsed ul { max-height: 0; opacity: 0 }</code>. JS e CSS trabalham juntos.</div>
+    </div>
+
+    <div>
+      <h3>Duas formas de conectar JS ao HTML</h3>
+      <pre><code><span class="c">&lt;!-- 1. Atributo direto no HTML (simples, usado no botão Enviar) --&gt;</span>
+&lt;<span class="k">button</span> <span class="a">onclick</span>="<span class="v">enviar()</span>"&gt;Enviar&lt;/<span class="k">button</span>&gt;
+
+<span class="c">&lt;!-- 2. addEventListener no JS (mais moderno e organizado) --&gt;</span>
+elemento.addEventListener(<span class="s">'click'</span>, função);</code></pre>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════ QUIZ ═══════════ -->
+<div class="mod" id="m14">
+  <div class="mod-h"><div class="num">14</div><div><h2>Quiz</h2><p>Teste seus conhecimentos</p></div></div>
+  <div class="mod-b">
+    <div class="quiz">
+
+      <div class="perg" id="q1">
+        <p>1. O que o <code>charset="UTF-8"</code> faz?</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Define a largura da página</label>
+          <label><input type="radio" name="q1" value="b"> Permite exibir acentos e ç corretamente</label>
+          <label><input type="radio" name="q1" value="c"> Carrega o CSS</label>
+          <label><input type="radio" name="q1" value="d"> Define o idioma</label>
+        </div>
+      </div>
+
+      <div class="perg" id="q2">
+        <p>2. Qual propriedade faz o menu ficar fixo ao rolar a página?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> <code>display: fixed</code></label>
+          <label><input type="radio" name="q2" value="b"> <code>position: absolute</code></label>
+          <label><input type="radio" name="q2" value="c"> <code>position: fixed</code></label>
+          <label><input type="radio" name="q2" value="d"> <code>float: top</code></label>
+        </div>
+      </div>
+
+      <div class="perg" id="q3">
+        <p>3. O que <code>box-sizing: border-box</code> faz?</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> Coloca borda colorida em todos os elementos</label>
+          <label><input type="radio" name="q3" value="b"> Inclui padding dentro da largura definida</label>
+          <label><input type="radio" name="q3" value="c"> Remove todas as margens</label>
+          <label><input type="radio" name="q3" value="d"> Deixa o elemento invisível</label>
+        </div>
+      </div>
+
+      <div class="perg" id="q4">
+        <p>4. Por que <code>content: ''</code> é obrigatório em <code>::before</code> e <code>::after</code>?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Não é — o pseudo-elemento funciona sem ele</label>
+          <label><input type="radio" name="q4" value="b"> Sem ele o pseudo-elemento não é renderizado</label>
+          <label><input type="radio" name="q4" value="c"> Apaga o conteúdo original</label>
+          <label><input type="radio" name="q4" value="d"> Conecta o CSS ao HTML</label>
+        </div>
+      </div>
+
+      <div class="perg" id="q5">
+        <p>5. Qual a diferença entre <code>class</code> e <code>id</code>?</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Não há diferença</label>
+          <label><input type="radio" name="q5" value="b"> id é para CSS, class para JavaScript</label>
+          <label><input type="radio" name="q5" value="c"> class pode se repetir; id deve ser único por página</label>
+          <label><input type="radio" name="q5" value="d"> class é para blocos, id para textos</label>
+        </div>
+      </div>
+
+      <div class="perg" id="q6">
+        <p>6. O que faz <code>gap: 20px</code> dentro de um flex container?</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Cria 20px de espaço entre cada filho</label>
+          <label><input type="radio" name="q6" value="b"> Define a margem externa do container</label>
+          <label><input type="radio" name="q6" value="c"> Move o container 20px para a direita</label>
+          <label><input type="radio" name="q6" value="d"> Define o tamanho da fonte</label>
+        </div>
+      </div>
+
+      <div class="perg" id="q7">
+        <p>7. O que <code>classList.toggle('menu-collapsed')</code> faz?</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Remove o elemento da página</label>
+          <label><input type="radio" name="q7" value="b"> Adiciona a classe se não existir, remove se existir</label>
+          <label><input type="radio" name="q7" value="c"> Muda o CSS do elemento permanentemente</label>
+          <label><input type="radio" name="q7" value="d"> Oculta o menu sem CSS</label>
+        </div>
+      </div>
+
+      <button class="btn-quiz" onclick="verificar()">Verificar Respostas</button>
+      <div id="resultado"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- fim .wrap -->
+
+<footer>Material de aula — Projeto LuxBeautiful — Front-End Web</footer>
 
 <script>
-/* ════════════════════════════════════════════════════════════════ */
-/* SWIRL BACKGROUND ANIMATION */
-/* ════════════════════════════════════════════════════════════════ */
-(function(){
-  const c = document.getElementById('swirl-canvas');
-  const ctx = c.getContext('2d');
-  let W, H;
-  
-  function resize() {
-    W = c.width = window.innerWidth;
-    H = c.height = window.innerHeight;
-  }
-  
-  resize();
-  window.addEventListener('resize', resize);
-  
-  const PALETTE = [
-    'rgba(37,87,176,',
-    'rgba(61,127,193,',
-    'rgba(106,180,216,',
-    'rgba(26,58,124,',
-    'rgba(13,21,64,'
-  ];
-  
-  const SWIRLS = Array.from({ length: 14 }, () => ({
-    cx: Math.random() * 1.2 - 0.1,
-    cy: Math.random() * 0.8,
-    r: 0.08 + Math.random() * 0.22,
-    speed: 0.0004 + Math.random() * 0.0006,
-    phase: Math.random() * Math.PI * 2,
-    color: PALETTE[Math.floor(Math.random() * PALETTE.length)]
-  }));
-  
-  function drawSwirl(s, ts) {
-    const cx = s.cx * W;
-    const cy = s.cy * H;
-    const rx = s.r * W;
-    const ry = s.r * H * 0.55;
-    
-    ctx.beginPath();
-    for (let a = 0; a <= Math.PI * 4; a += 0.04) {
-      const d = a / (Math.PI * 4);
-      const wave = Math.sin(a * 3 + ts * s.speed * 8000 + s.phase) * rx * 0.04;
-      const ang = a + ts * s.speed * 1000;
-      const x = cx + (rx * (1 - d * 0.6) + wave) * Math.cos(ang);
-      const y = cy + (ry * (1 - d * 0.6) + wave * 0.5) * Math.sin(ang);
-      
-      a === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+const gabarito = { q1:'b', q2:'c', q3:'b', q4:'b', q5:'c', q6:'a', q7:'b' };
+
+function verificar() {
+  let acertos = 0;
+  const total = Object.keys(gabarito).length;
+
+  for (const [q, certa] of Object.entries(gabarito)) {
+    const perg = document.getElementById(q);
+    perg.querySelectorAll('label').forEach(l => l.style.background = '');
+
+    const sel = document.querySelector(`input[name="${q}"]:checked`);
+    if (sel) {
+      if (sel.value === certa) {
+        acertos++;
+        sel.parentElement.style.background = '#c8e6c9';
+      } else {
+        sel.parentElement.style.background = '#ffcdd2';
+        perg.querySelectorAll('label').forEach(l => {
+          if (l.querySelector('input').value === certa)
+            l.style.background = '#c8e6c9';
+        });
+      }
     }
-    
-    ctx.strokeStyle = s.color + (0.06 + Math.sin(ts * 0.001 + s.phase) * 0.03).toFixed(3) + ')';
-    ctx.lineWidth = 1.5 + Math.sin(ts * 0.0008 + s.phase) * 0.8;
-    ctx.stroke();
   }
-  
-  function loop(ts) {
-    ctx.clearRect(0, 0, W, H);
-    SWIRLS.forEach(s => drawSwirl(s, ts));
-    requestAnimationFrame(loop);
-  }
-  
-  requestAnimationFrame(loop);
-})();
 
-/* ════════════════════════════════════════════════════════════════ */
-/* STARS CANVAS */
-/* ════════════════════════════════════════════════════════════════ */
-(function(){
-  const c = document.getElementById('star-canvas');
-  const ctx = c.getContext('2d');
-  let W, H;
-  
-  function resize() {
-    W = c.width = window.innerWidth;
-    H = c.height = window.innerHeight;
-  }
-  
-  resize();
-  window.addEventListener('resize', resize);
-  
-  const STARS = Array.from({ length: 120 }, () => ({
-    x: Math.random(),
-    y: Math.random(),
-    r: Math.random() * 1.6 + 0.3,
-    phase: Math.random() * Math.PI * 2,
-    speed: 0.0005 + Math.random() * 0.002,
-    gold: Math.random() > 0.75
-  }));
-  
-  const GLOWS = Array.from({ length: 8 }, () => ({
-    x: Math.random(),
-    y: Math.random() * 0.7,
-    r: 3 + Math.random() * 5,
-    phase: Math.random() * Math.PI * 2,
-    speed: 0.0003 + Math.random() * 0.001,
-    rgb: Math.random() > 0.5 ? [245, 200, 66] : [106, 180, 216]
-  }));
-  
-  function loop(ts) {
-    ctx.clearRect(0, 0, W, H);
-    
-    // Draw stars
-    STARS.forEach(s => {
-      const a = 0.3 + Math.sin(ts * s.speed + s.phase) * 0.3;
-      ctx.beginPath();
-      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = s.gold ? `rgba(245,200,66,${a})` : `rgba(200,225,255,${a})`;
-      ctx.fill();
-    });
-    
-    // Draw glows
-    GLOWS.forEach(g => {
-      const a = 0.5 + Math.sin(ts * g.speed + g.phase) * 0.3;
-      const sc = 1 + Math.sin(ts * g.speed * 2 + g.phase) * 0.25;
-      const x = g.x * W;
-      const y = g.y * H;
-      const r = g.r * sc;
-      const [R, G, B] = g.rgb;
-      
-      const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 5);
-      grd.addColorStop(0, `rgba(${R},${G},${B},${a})`);
-      grd.addColorStop(0.3, `rgba(${R},${G},${B},${(a * 0.4).toFixed(3)})`);
-      grd.addColorStop(1, `rgba(${R},${G},${B},0)`);
-      
-      ctx.beginPath();
-      ctx.arc(x, y, r * 5, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
-      ctx.fill();
-      
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${R},${G},${B},${Math.min(1, a * 1.5)})`;
-      ctx.fill();
-    });
-    
-    requestAnimationFrame(loop);
-  }
-  
-  requestAnimationFrame(loop);
-})();
-
-/* ════════════════════════════════════════════════════════════════ */
-/* SCROLL REVEAL ANIMATION */
-/* ════════════════════════════════════════════════════════════════ */
-const revealElements = document.querySelectorAll(
-  '.section-label, .section-title, .reason-card, .tl-item, ' +
-  '.msg-visual, .msg-content, .poem-wrap, .final-names, ' +
-  '.final-quote, .final-stars'
-);
-
-const observerOptions = { threshold: 0.12 };
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    
-    const cards = [...document.querySelectorAll('.reason-card')];
-    const idx = cards.indexOf(e.target);
-    
-    e.target.style.transitionDelay = idx >= 0 ? (idx * 0.1) + 's' : '0s';
-    e.target.classList.add('vis');
-    io.unobserve(e.target);
-  });
-}, observerOptions);
-
-revealElements.forEach(el => io.observe(el));
-
-/* ════════════════════════════════════════════════════════════════ */
-/* COUNTDOWN SECTION */
-/* ════════════════════════════════════════════════════════════════ */
-// Alvo: 22 de maio de 2026 meia-noite (horário de Brasília = UTC-3)
-const TARGET = new Date('2026-05-22T00:00:00-03:00').getTime();
-// Total de segundos do ponto de referência até o alvo (17 dias = 1.468.800 segundos)
-const REF_START = new Date('2026-05-05T00:00:00-03:00').getTime();
-const TOTAL_SECS = Math.round((TARGET - REF_START) / 1000);
-
-const cdNum = document.getElementById('cd-num');
-const cdBar = document.getElementById('cd-bar');
-const cdSec = document.getElementById('countdown-section');
-
-let countdownInterval = null;
-
-function updateCountdown() {
-  const now = Date.now();
-  const diff = Math.max(0, Math.round((TARGET - now) / 1000));
-  
-  cdNum.textContent = diff.toLocaleString('pt-BR');
-  const pct = Math.max(0, Math.min(100, (1 - diff / TOTAL_SECS) * 100));
-  cdBar.style.width = pct + '%';
-  
-  if (diff === 0) {
-    cdNum.textContent = '0';
-    document.querySelector('.cd-label').textContent = 'chegou o momento ✦';
-    document.querySelector('.cd-unit').textContent = '';
-    document.querySelector('.cd-msg').textContent = 'esse dia finalmente chegou 🌟';
-    
-    if (countdownInterval) clearInterval(countdownInterval);
-    return;
-  }
-  
-  if (!countdownInterval) {
-    countdownInterval = setInterval(updateCountdown, 1000);
-  }
+  const res = document.getElementById('resultado');
+  res.style.display = 'block';
+  res.style.marginTop = '12px';
+  res.style.fontWeight = '700';
+  res.style.fontSize = '13.5px';
+  res.style.color = acertos >= total * 0.7 ? '#2a7a2a' : '#c00';
+  res.textContent = acertos === total
+    ? `✅ Perfeito! ${acertos}/${total}`
+    : acertos >= Math.ceil(total / 2)
+    ? `👍 ${acertos}/${total} — Revise os pontos em vermelho.`
+    : `📖 ${acertos}/${total} — Releia os módulos marcados.`;
 }
-
-/* ════════════════════════════════════════════════════════════════ */
-/* SECRET BUTTON FUNCTIONALITY */
-/* ════════════════════════════════════════════════════════════════ */
-const btn = document.getElementById('btn-secreto');
-const overlay = document.getElementById('reveal-overlay');
-const label = btn.querySelector('.btn-label');
-
-btn.addEventListener('click', function() {
-  // Overlay flash
-  overlay.classList.add('active');
-  setTimeout(() => overlay.classList.remove('active'), 900);
-
-  // Burst grande de emojis
-  const r = btn.getBoundingClientRect();
-  const cx = r.left + r.width / 2;
-  const cy = r.top + r.height / 2;
-  
-  for (let i = 0; i < 14; i++) {
-    burstBig(cx, cy, i * 40);
-  }
-
-  // Atualiza botão
-  btn.classList.add('revealed');
-  label.textContent = 'eu te amo ✦';
-
-  // Mostra countdown
-  cdSec.style.display = 'block';
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      cdSec.classList.add('visible');
-      cdSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-  });
-  
-  updateCountdown();
-});
-
-/* ════════════════════════════════════════════════════════════════ */
-/* PARTICLE EFFECTS */
-/* ════════════════════════════════════════════════════════════════ */
-const BIG_BURST_EMOJIS = ['✦', '★', '✧', '💛', '💫', '🌟', '❤️', '✨'];
-const SMALL_BURST_EMOJIS = ['✦', '★', '✧', '⭐', '💫', '🌟'];
-
-function burstBig(x, y, delay) {
-  setTimeout(() => {
-    const el = document.createElement('div');
-    el.textContent = BIG_BURST_EMOJIS[Math.floor(Math.random() * BIG_BURST_EMOJIS.length)];
-    
-    const hue = Math.random() > 0.5 ? '#f5c842' : '#6ab4d8';
-    const size = Math.random() * 20 + 14;
-    
-    el.style.cssText = `
-      position: fixed;
-      left: ${x}px;
-      top: ${y}px;
-      font-size: ${size}px;
-      color: ${hue};
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      text-shadow: 0 0 12px ${hue};
-    `;
-    
-    document.body.appendChild(el);
-    
-    el.animate([
-      {
-        opacity: 1,
-        transform: `translate(${Math.random() * 120 - 60}px, ${Math.random() * -120 - 30}px) scale(1) rotate(0deg)`
-      },
-      {
-        opacity: 0,
-        transform: `translate(${Math.random() * 200 - 100}px, ${Math.random() * -200 - 60}px) scale(0.2) rotate(${Math.random() * 360}deg)`
-      }
-    ], {
-      duration: 1200,
-      easing: 'cubic-bezier(0, 0, 0.2, 1)',
-      fill: 'forwards'
-    });
-    
-    setTimeout(() => el.remove(), 1250);
-  }, delay);
-}
-
-function burst(x, y) {
-  for (let i = 0; i < 6; i++) {
-    const el = document.createElement('div');
-    el.textContent = SMALL_BURST_EMOJIS[Math.floor(Math.random() * SMALL_BURST_EMOJIS.length)];
-    
-    const hue = Math.random() > 0.5 ? '#f5c842' : '#6ab4d8';
-    
-    el.style.cssText = `
-      position: fixed;
-      left: ${x}px;
-      top: ${y}px;
-      font-size: ${Math.random() * 14 + 10}px;
-      color: ${hue};
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      text-shadow: 0 0 8px ${hue};
-    `;
-    
-    document.body.appendChild(el);
-    
-    el.animate([
-      {
-        opacity: 1,
-        transform: `translate(${Math.random() * 80 - 40}px, ${Math.random() * -80 - 20}px) scale(1)`
-      },
-      {
-        opacity: 0,
-        transform: `translate(${Math.random() * 130 - 65}px, ${Math.random() * -130 - 40}px) scale(0.3)`
-      }
-    ], {
-      duration: 950,
-      easing: 'ease-out',
-      fill: 'forwards'
-    });
-    
-    setTimeout(() => el.remove(), 1000);
-  }
-}
-
-// Efeitos de partículas ao clicar/tocar
-document.addEventListener('click', e => burst(e.clientX, e.clientY));
-document.addEventListener('touchstart', e => {
-  const t = e.touches[0];
-  burst(t.clientX, t.clientY);
-}, { passive: true });
 </script>
 </body>
 </html>
